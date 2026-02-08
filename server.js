@@ -29,7 +29,10 @@ const startServer = async () => {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔗 API: http://localhost:${PORT}`);
+    console.log(`🔗 API listening on port ${PORT}`);
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+      console.log(`🔗 Public API: https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+    }
     console.log(`📧 Company Email: ${process.env.COMPANY_EMAIL || 'info@aarcsolution.com'}`);
     console.log(`\n💡 Ready to accept contact form submissions!\n`);
   });
