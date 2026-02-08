@@ -31,16 +31,16 @@ export const validateContactForm = [
   body('subject')
     .trim()
     .notEmpty()
-    .withMessage('Subject is required')
+    .withMessage('Please enter a valid subject')
     .isLength({ min: 3, max: 200 })
     .withMessage('Subject must be between 3 and 200 characters'),
   
   body('message')
     .trim()
     .notEmpty()
-    .withMessage('Message is required')
-    .isLength({ min: 10, max: 2000 })
-    .withMessage('Message must be between 10 and 2000 characters'),
+    .withMessage('Please enter a valid message')
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Please enter a valid message'),
   
   (req, res, next) => {
     const errors = validationResult(req);

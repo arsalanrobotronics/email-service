@@ -31,7 +31,7 @@ export const handleContactForm = async (req, res) => {
     if (!emailExists) {
       return res.status(400).json({
         success: false,
-        message: 'The email address appears to be invalid. Please use a working email address.'
+        message: 'Invalid email address. Please enter a valid email address.'
       });
     }
 
