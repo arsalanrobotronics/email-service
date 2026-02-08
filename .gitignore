@@ -1,5 +1,4 @@
-.env.example
-.env
+
 node_modules/
 .DS_Store
 *.log
@@ -8,3 +7,4 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock
+
