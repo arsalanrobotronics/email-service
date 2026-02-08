@@ -38,19 +38,17 @@ export const handleContactForm = async (req, res) => {
     await sendEmailToCompany(formData);
     console.log('✅ Email sent to company');
 
+    try {
+      await sendThankYouEmail(formData);
+      console.log('✅ Thank you email sent to client');
+    } catch (emailError) {
+      console.error('❌ Failed to send thank you email:', emailError.message);
+    }
+
     res.status(200).json({
       success: true,
       message: 'Your message has been sent successfully! We will get back to you soon.'
     });
-
-    setTimeout(async () => {
-      try {
-        await sendThankYouEmail(formData);
-        console.log('✅ Thank you email sent to client');
-      } catch (emailError) {
-        console.error('❌ Failed to send thank you email:', emailError.message);
-      }
-    }, 15000);
 
   } catch (error) {
     console.error('❌ Error sending emails:', error);
