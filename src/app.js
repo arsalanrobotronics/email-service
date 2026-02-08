@@ -5,8 +5,13 @@ import contactRoutes from './routes/contact.routes.js';
 const app = express();
 
 // CORS configuration
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:8080',
+  origin: allowedOrigins.length ? allowedOrigins : '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -23,7 +28,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api/contact', contactRoutes);
+// Support legacy and proxy setups that hit either /api/contact or /contact
+app.use(['/api/contact', '/contact'], contactRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);
