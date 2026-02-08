@@ -1,7 +1,12 @@
 import nodemailer from 'nodemailer';
 import { emailConfig, companyEmail } from '../config/email.config.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const transporter = nodemailer.createTransport(emailConfig);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const sendEmailToCompany = async (formData) => {
   const { fullName, email, company, phone, subject, message } = formData;
@@ -39,6 +44,13 @@ export const sendThankYouEmail = async (formData) => {
     from: emailConfig.auth.user,
     to: email,
     subject: 'Thank You - AARC Solutions',
+    attachments: [
+      {
+        filename: 'aarc-logo.png',
+        path: path.join(__dirname, '../assets/Untitled (300x).png'),
+        cid: 'aarc-logo'
+      }
+    ],
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +71,7 @@ export const sendThankYouEmail = async (formData) => {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                       <tr>
                         <td width="72" valign="middle" style="padding-right:16px;">
-                          <img src="../assets/Untitled (300x).png" alt="AARC Solutions" width="72" style="display:block;border:0;max-width:72px;">
+                          <img src="cid:aarc-logo" alt="AARC Solutions" width="72" style="display:block;border:0;max-width:72px;">
                         </td>
                         <td valign="middle">
                           <p style="margin:4px 0 0;font-size:24px;font-weight:700;color:#ffffff;">AARC Solutions</p>
