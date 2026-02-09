@@ -16,9 +16,13 @@ const verifyEmailDomain = async (email) => {
 
 export const handleContactForm = async (req, res) => {
   try {
+    // Store original email before any processing
+    const originalEmail = req.body.email;
+    
     const formData = {
       fullName: req.body.fullName,
       email: req.body.email,
+      originalEmail: originalEmail, // Add original email to formData
       company: req.body.company || '',
       phone: req.body.phone || '',
       subject: req.body.subject,
@@ -26,6 +30,7 @@ export const handleContactForm = async (req, res) => {
     };
 
     console.log('📨 Processing contact form submission from:', formData.email);
+    console.log('📧 Original email format:', originalEmail);
 
     const emailExists = await verifyEmailDomain(formData.email);
     if (!emailExists) {

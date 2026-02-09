@@ -9,13 +9,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const sendEmailToCompany = async (formData) => {
-  const { fullName, email, company, phone, subject, message } = formData;
-
-  // Store original email for template use
-  const originalEmail = email;
+  const { fullName, email, originalEmail, company, phone, subject, message } = formData;
 
   // Log original email for debugging
-  console.log('📧 Original client email:', email);
+  console.log('📧 Original client email:', originalEmail);
 
   const mailOptions = {
     from: emailConfig.auth.user,
@@ -44,13 +41,11 @@ From: AARC Solutions Website Contact Form
 };
 
 export const sendThankYouEmail = async (formData) => {
-  const { fullName, email } = formData;
-
-  // Store original email for template use
-  const originalEmail = email;
+  const { fullName, email, originalEmail } = formData;
 
   // Log original email for debugging
   console.log('📧 Sending thank-you email to:', email);
+  console.log('📧 Original email format for template:', originalEmail);
 
   const mailOptions = {
     from: emailConfig.auth.user,
