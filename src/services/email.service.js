@@ -34,56 +34,6 @@ ${message}
 ---
 Received on: ${new Date().toLocaleString()}
 From: AARC Solutions Website Contact Form
-    `,
-    html: `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .header { background: #0a3671; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-    .content { padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }
-    .field { margin-bottom: 15px; }
-    .label { font-weight: bold; color: #0a3671; }
-    .value { background: #f5f5f5; padding: 8px; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h2>New Contact Form Submission</h2>
-  </div>
-  <div class="content">
-    <div class="field">
-      <div class="label">Full Name:</div>
-      <div class="value">${fullName}</div>
-    </div>
-    <div class="field">
-      <div class="label">Email:</div>
-      <div class="value">${email}</div>
-    </div>
-    <div class="field">
-      <div class="label">Company:</div>
-      <div class="value">${company || 'Not provided'}</div>
-    </div>
-    <div class="field">
-      <div class="label">Phone:</div>
-      <div class="value">${phone || 'Not provided'}</div>
-    </div>
-    <div class="field">
-      <div class="label">Subject:</div>
-      <div class="value">${subject}</div>
-    </div>
-    <div class="field">
-      <div class="label">Message:</div>
-      <div class="value">${message.replace(/\n/g, '<br>')}</div>
-    </div>
-    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
-      Received on: ${new Date().toLocaleString()}<br>
-      From: AARC Solutions Website Contact Form
-    </div>
-  </div>
-</body>
-</html>
     `
   };
 
@@ -92,6 +42,9 @@ From: AARC Solutions Website Contact Form
 
 export const sendThankYouEmail = async (formData) => {
   const { fullName, email } = formData;
+
+  // Store original email for template use
+  const originalEmail = email;
 
   // Log original email for debugging
   console.log('📧 Sending thank-you email to:', email);
@@ -153,7 +106,7 @@ export const sendThankYouEmail = async (formData) => {
                 <tr>
                   <td style="font-size:14px;color:#0f172a;line-height:1.6;">
                     <div style="margin-bottom:8px;"><span style="color:#64748b;">Response window:</span> <strong style="color:#0f172a;">24–48 hours</strong></div>
-                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Contact method:</span> <strong style="color:#0f172a;">Email reply to: ${email}</strong></div>
+                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Contact method:</span> <strong style="color:#0f172a;">Email reply to: ${originalEmail}</strong></div>
                     <div><span style="color:#64748b;">Next steps:</span> <strong style="color:#0f172a;">Personalized consultation proposal</strong></div>
                   </td>
                 </tr>
@@ -181,8 +134,8 @@ export const sendThankYouEmail = async (formData) => {
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                   <td style="font-size:12px;color:#64748b;text-align:center;line-height:1.6;">
-                    <p style="margin:0 0 8px;">This email was sent to ${email} because you contacted AARC Solutions.</p>
-                    <p style="margin:0;"> 2025 AARC Solutions. All rights reserved.</p>
+                    <p style="margin:0 0 8px;">This email was sent to ${originalEmail} because you contacted AARC Solutions.</p>
+                    <p style="margin:0;">© 2025 AARC Solutions. All rights reserved.</p>
                   </td>
                 </tr>
               </table>
@@ -196,15 +149,7 @@ export const sendThankYouEmail = async (formData) => {
 </html>`
   };
 
-  try {
-    const result = await transporter.sendMail(mailOptions);
-    console.log('✅ Thank-you email sent successfully to:', email);
-    return result;
-  } catch (error) {
-    console.error('❌ Failed to send thank-you email to:', email);
-    console.error('❌ Error details:', error.message);
-    throw error;
-  }
+  return await transporter.sendMail(mailOptions);
 };
 
 export const verifyEmailConfig = async () => {
