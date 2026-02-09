@@ -32,8 +32,8 @@ export const validateContactForm = [
     .trim()
     .notEmpty()
     .withMessage('Please enter a valid subject')
-    .isLength({ min: 3, max: 200 })
-    .withMessage('Subject must be between 3 and 200 characters'),
+    .isLength({ min: 2, max: 200 })
+    .withMessage('Subject must be between 2 and 200 characters'),
   
   body('message')
     .trim()

@@ -11,6 +11,9 @@ const __dirname = path.dirname(__filename);
 export const sendEmailToCompany = async (formData) => {
   const { fullName, email, company, phone, subject, message } = formData;
 
+  // Log original email for debugging
+  console.log('📧 Original client email:', email);
+
   const mailOptions = {
     from: emailConfig.auth.user,
     to: companyEmail,
@@ -31,6 +34,56 @@ ${message}
 ---
 Received on: ${new Date().toLocaleString()}
 From: AARC Solutions Website Contact Form
+    `,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .header { background: #0a3671; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }
+    .field { margin-bottom: 15px; }
+    .label { font-weight: bold; color: #0a3671; }
+    .value { background: #f5f5f5; padding: 8px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>New Contact Form Submission</h2>
+  </div>
+  <div class="content">
+    <div class="field">
+      <div class="label">Full Name:</div>
+      <div class="value">${fullName}</div>
+    </div>
+    <div class="field">
+      <div class="label">Email:</div>
+      <div class="value">${email}</div>
+    </div>
+    <div class="field">
+      <div class="label">Company:</div>
+      <div class="value">${company || 'Not provided'}</div>
+    </div>
+    <div class="field">
+      <div class="label">Phone:</div>
+      <div class="value">${phone || 'Not provided'}</div>
+    </div>
+    <div class="field">
+      <div class="label">Subject:</div>
+      <div class="value">${subject}</div>
+    </div>
+    <div class="field">
+      <div class="label">Message:</div>
+      <div class="value">${message.replace(/\n/g, '<br>')}</div>
+    </div>
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
+      Received on: ${new Date().toLocaleString()}<br>
+      From: AARC Solutions Website Contact Form
+    </div>
+  </div>
+</body>
+</html>
     `
   };
 
@@ -39,6 +92,9 @@ From: AARC Solutions Website Contact Form
 
 export const sendThankYouEmail = async (formData) => {
   const { fullName, email } = formData;
+
+  // Log original email for debugging
+  console.log('📧 Sending thank-you email to:', email);
 
   const mailOptions = {
     from: emailConfig.auth.user,
@@ -97,19 +153,39 @@ export const sendThankYouEmail = async (formData) => {
                 <tr>
                   <td style="font-size:14px;color:#0f172a;line-height:1.6;">
                     <div style="margin-bottom:8px;"><span style="color:#64748b;">Response window:</span> <strong style="color:#0f172a;">24–48 hours</strong></div>
-                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Assigned team:</span> <strong style="color:#0f172a;">Solutions Desk</strong></div>
-                    <div><span style="color:#64748b;">Status:</span> <strong style="color:#0f172a;">✔ In review</strong></div>
+                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Contact method:</span> <strong style="color:#0f172a;">Email reply to: ${email}</strong></div>
+                    <div><span style="color:#64748b;">Next steps:</span> <strong style="color:#0f172a;">Personalized consultation proposal</strong></div>
                   </td>
                 </tr>
               </table>
+              <p style="margin:28px 0 20px;font-size:15px;line-height:1.7;color:#475569;">
+                If you need immediate assistance, please don't hesitate to reach out directly:
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;">
+                <tr>
+                  <td style="font-size:14px;color:#475569;line-height:1.6;">
+                    <div style="margin-bottom:12px;"><strong style="color:#0f172a;">Email:</strong> <a href="mailto:info@aarcsolution.com" style="color:#0a3671;text-decoration:none;">info@aarcsolution.com</a></div>
+                    <div style="margin-bottom:12px;"><strong style="color:#0f172a;">Phone:</strong> <a href="tel:+92343226765" style="color:#0a3671;text-decoration:none;">+92 343 226 765</a></div>
+                    <div><strong style="color:#0f172a;">Website:</strong> <a href="https://aarcsolution.com" style="color:#0a3671;text-decoration:none;">aarcsolution.com</a></div>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:28px 0 0;font-size:14px;color:#64748b;text-align:center;">
+                Best regards,<br>
+                <strong style="color:#0f172a;">The AARC Solutions Team</strong>
+              </p>
             </td>
           </tr>
           <tr>
-          
-          </tr>
-          <tr>
-            <td style="padding:18px 28px 24px;border-top:1px solid #e2e8f0;background:#f8fafc;text-align:center;font-size:12px;color:#94a3b8;">
-              This is an automated confirmation. Please do not reply directly.
+            <td style="padding:24px 34px 28px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="font-size:12px;color:#64748b;text-align:center;line-height:1.6;">
+                    <p style="margin:0 0 8px;">This email was sent to ${email} because you contacted AARC Solutions.</p>
+                    <p style="margin:0;"> 2025 AARC Solutions. All rights reserved.</p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
@@ -117,10 +193,18 @@ export const sendThankYouEmail = async (formData) => {
     </tr>
   </table>
 </body>
-</html> `
+</html>`
   };
 
-  return await transporter.sendMail(mailOptions);
+  try {
+    const result = await transporter.sendMail(mailOptions);
+    console.log('✅ Thank-you email sent successfully to:', email);
+    return result;
+  } catch (error) {
+    console.error('❌ Failed to send thank-you email to:', email);
+    console.error('❌ Error details:', error.message);
+    throw error;
+  }
 };
 
 export const verifyEmailConfig = async () => {
