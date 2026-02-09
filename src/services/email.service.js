@@ -49,7 +49,7 @@ export const sendThankYouEmail = async (formData) => {
 
   const mailOptions = {
     from: emailConfig.auth.user,
-    to: originalEmail || email,
+    to: originalEmail,
     subject: 'Thank You - AARC Solutions',
     attachments: [
       {
