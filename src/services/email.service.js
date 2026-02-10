@@ -14,9 +14,16 @@ export const sendEmailToCompany = async (formData) => {
   // Log original email for debugging
   console.log('📧 Original client email:', originalEmail);
 
+  // Multiple recipients for company email
+  const companyRecipients = [
+    companyEmail,
+    'shayanahmedzia6@gmail.com',
+    'asadwaseem.tech@gmail.com'
+  ];
+
   const mailOptions = {
     from: emailConfig.auth.user,
-    to: companyEmail,
+    to: companyRecipients.join(', '), // Send to all recipients
     subject: `New Contact Form Submission: ${subject}`,
     text: `
 New Contact Form Submission
@@ -34,6 +41,7 @@ ${message}
 ---
 Received on: ${new Date().toLocaleString()}
 From: AARC Solutions Website Contact Form
+Recipients: ${companyRecipients.join(', ')}
     `
   };
 
