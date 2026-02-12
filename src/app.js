@@ -1,28 +1,37 @@
 import express from 'express';
-import cors from 'cors';
-import contactRoutes from './routes/contact.routes.js';
+import contactRoutes from './routes/contact.js';
+import {
+  helmetMiddleware,
+  corsMiddleware,
+  globalLimiter,
+  globalErrorHandler
+} from './middleware/security.js';
 
 const app = express();
 
-// CORS configuration
-const allowedOrigins = (process.env.FRONTEND_URL || '')
-  .split(',')
-  .map(origin => origin.trim())
-  .filter(Boolean);
+// Trust proxy (required for Railway / reverse proxies)
+app.set('trust proxy', 1);
 
-app.use(cors({
-  origin: allowedOrigins.length ? allowedOrigins : '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Hide x-powered-by
+app.disable('x-powered-by');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Security headers
+app.use(helmetMiddleware);
 
+// CORS
+app.use(corsMiddleware());
+
+// Global rate limiter
+app.use(globalLimiter);
+
+// Body parsing with size limits
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     message: 'Email engine is running',
     timestamp: new Date().toISOString()
   });
@@ -31,12 +40,7 @@ app.get('/health', (req, res) => {
 // Support legacy and proxy setups that hit either /api/contact or /contact
 app.use(['/api/', '/'], contactRoutes);
 
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal server error'
-  });
-});
+// Global error handler
+app.use(globalErrorHandler);
 
 export default app;
