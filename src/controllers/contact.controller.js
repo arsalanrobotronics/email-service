@@ -114,26 +114,25 @@ export const handleContactForm = async (req, res) => {
       });
     }
 
-    // ─── Send emails through queue (serial, never parallel) ───
-    await emailQueue.enqueue(() => sendEmailToCompany(formData));
-    console.log('✅ Email sent to company');
-
-    try {
-      await emailQueue.enqueue(() => sendThankYouEmail(formData));
-      console.log('✅ Thank you email sent to client');
-    } catch (emailError) {
-      console.error('❌ Failed to send thank you email:', emailError.message);
-    }
-
-    // ─── Update abuse counters after successful send ───
+    // ─── Update abuse counters immediately (before sending) ───
     ipCache.set(clientIp, ipCount + 1);
     emailCache.set(emailKey, emailCount + 1);
     messageCache.set(msgHash, true);
 
+    // ─── Respond to frontend FIRST (fast response) ───
     res.status(200).json({
       success: true,
       message: 'Your message has been sent successfully! We will get back to you soon.'
     });
+
+    // ─── Send emails in background (fire and forget) ───
+    emailQueue.enqueue(() => sendEmailToCompany(formData))
+      .then(() => console.log('✅ Email sent to company'))
+      .catch((err) => console.error('❌ Failed to send company email:', err.message));
+
+    emailQueue.enqueue(() => sendThankYouEmail(formData))
+      .then(() => console.log('✅ Thank you email sent to client'))
+      .catch((err) => console.error('❌ Failed to send thank you email:', err.message));
 
   } catch (error) {
     console.error('❌ Error sending emails:', error);
