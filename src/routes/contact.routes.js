@@ -4,6 +4,7 @@ import { validateContactForm } from '../middleware/validation.middleware.js';
 
 const router = express.Router();
 
-router.post('/', validateContactForm, handleContactForm);
+router.post('/contact', validateContactForm, handleContactForm);
 
 export default router;
+

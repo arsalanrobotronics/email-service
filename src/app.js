@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
 });
 
 // Support legacy and proxy setups that hit either /api/contact or /contact
-app.use(['/api/contact', '/contact'], contactRoutes);
+app.use(['/api/', '/'], contactRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);

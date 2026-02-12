@@ -17,8 +17,10 @@ export const sendEmailToCompany = async (formData) => {
   // Multiple recipients for company email
   const companyRecipients = [
     companyEmail,
-    'shayanahmedzia6@gmail.com',
-    'asadwaseem.tech@gmail.com'
+    process.env.EMAIL_1,
+    process.env.EMAIL_2
+   // 'shayanahmedzia6@gmail.com',
+    //'asadwaseem.tech@gmail.com'
   ];
 
   const mailOptions = {
