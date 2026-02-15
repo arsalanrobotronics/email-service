@@ -113,7 +113,7 @@ export const sendThankYouEmail = async (formData) => {
                 </tr>
                 <tr>
                   <td style="font-size:14px;color:#0f172a;line-height:1.6;">
-                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Response window:</span> <strong style="color:#0f172a;">24–48 hours</strong></div>
+                    <div style="margin-bottom:8px;"><span style="color:#64748b;">Response window:</span> <strong style="color:#0f172a;">1–2 hours</strong></div>
                     <div style="margin-bottom:8px;"><span style="color:#64748b;">Assigned team:</span> <strong style="color:#0f172a;">Solutions Desk</strong></div>
                     <div><span style="color:#64748b;">Status:</span> <strong style="color:#0f172a;">✔ In review</strong></div>
                   </td>
