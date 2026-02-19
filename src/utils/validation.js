@@ -1,10 +1,24 @@
 import validator from 'validator';
 
 export const sanitize = (value) => {
-  if (!value) return '';
-  let clean = validator.trim(value);
+ // if (!value) return '';
+ /* let clean = validator.trim(value);
   clean = validator.escape(clean);
   clean = validator.stripLow(clean, { keep_newlines: true });
+  return clean;*/
+  if (!value) return '';
+
+  let clean = validator.trim(value);
+
+  // Remove HTML tags
+  clean = clean.replace(/<\/?[^>]+(>|$)/g, '');
+
+  // Keep ONLY letters, numbers, and spaces
+  clean = clean.replace(/[^a-zA-Z0-9\s]/g, '');
+
+  // Normalize spaces
+  clean = clean.replace(/\s+/g, ' ').trim();
+
   return clean;
 };
 
